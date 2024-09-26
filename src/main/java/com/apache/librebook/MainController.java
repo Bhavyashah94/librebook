@@ -137,29 +137,28 @@ public class MainController implements Initializable {
 
     @FXML
     private void loadMemberInfo(ActionEvent event) {
-//        String sql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
-//        try {
-//            ResultSet rs = dataBaseHandler.execQuery(sql,isbnInfo.getText());
-//            boolean flag = false;
-//            while (rs.next()) {
-//                String id = rs.getString("ID");
-//                String name = rs.getString("name");
-//                String email = rs.getString("authors");
-//                String publisher = rs.getString("publisher");
-//                String imageUrl = rs.getString("imageUrl");
-//                int totalQuantity = rs.getInt("totalQuantity");
-//                int availableQuantity = rs.getInt("availableQuantaty");
-//                bookInfo.setText("ISBN:"+isbn+"\nTitle"+title+"\nAuthors:"+authors+"\nPublisher"+publisher+"\nTotalQuantatiy: "+Integer.toString(totalQuantity)+"\nAvailableQuantity: "+Integer.toString(availableQuantity));
-//                coverImage.setImage(image.getImage(imageUrl));
-//                flag = true;
-//            }
-//            if (!flag) {
-//                bookInfo.setText("Book Not Availaible");
-//            }
-//            
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        String sql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
+        try {
+            ResultSet rs = dataBaseHandler.execQuery(sql,idinfo.getText());
+            boolean flag = false;
+            while (rs.next()) {
+                String id = rs.getString("ID");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                
+                memberInfo.setText("ID: "+id+"\nName: "+name+"\nEmail: "+email+"\nPhone: "+phone+"\nAddress: "+address);
+                
+                flag = true;
+            }
+            if (!flag) {
+                bookInfo.setText("Not a Member");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
