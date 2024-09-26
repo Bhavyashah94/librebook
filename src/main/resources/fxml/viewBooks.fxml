@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.apache.librebook.ViewBooksController">
+    <stylesheets>
+        <URL value="@/styles/viewbooks.css" />
+    </stylesheets>
+    <children>
+        <TableView fx:id="bookTableView" layoutY="44.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="561.0" prefWidth="914.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="imageCol" prefWidth="-1.0" text="Image">
+                </TableColumn>
+                <TableColumn fx:id="isbnCol" minWidth="0.0" prefWidth="-1.0" text="ISBN13" />
+                <TableColumn fx:id="titleCol" prefWidth="-1.0" text="Title" />
+                <TableColumn fx:id="authorCol" prefWidth="-1.0" text="Author" />
+                <TableColumn fx:id="publisherCol" prefWidth="-1.0" text="Publisher" />
+                <TableColumn fx:id="availableCol" prefWidth="-1.0" text="Available Quantity" />
+                <TableColumn fx:id="totalCol" prefWidth="-1.0" text="Total Quantity" />
+            </columns>
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Edit" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Copy ISBN" onAction="#copyISBN" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+
+        </TableView>
+        <TextField fx:id="searchField" layoutX="673.0" layoutY="8.0" prefHeight="25.0" prefWidth="169.0" AnchorPane.rightAnchor="71.66666666666663" AnchorPane.topAnchor="8.0" />
+        <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="830.0" layoutY="14.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="31.0" text="Search" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="8.0">
+            <graphic>
+                <ImageView fitHeight="33.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../icons/search.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </children>
+</AnchorPane>
