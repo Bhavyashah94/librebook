@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import org.json.JSONObject;
 import org.json.JSONArray;

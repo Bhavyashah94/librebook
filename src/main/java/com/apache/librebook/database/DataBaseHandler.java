@@ -4,32 +4,32 @@ package com.apache.librebook.database;
  *
  * @author bhavy
  */
-
 import java.sql.*;
 
 public class DataBaseHandler {
-    
+
     private static DataBaseHandler handle = null;
-    
+
     private static final String DB_URL = "jdbc:mysql://localhost/librebooks";
     private static final String USER = "root";
     private static final String PASS = "";
     private Connection conn = null;
     private Statement stmt = null;
-    
-    private DataBaseHandler(){
-       createConnection();
-       setupBookTable();
-       setupMemberTable();
+
+    private DataBaseHandler() {
+        createConnection();
+        setupBookTable();
+        setupMemberTable();
+        setupIssuesTable();
     }
-    
+
     public static DataBaseHandler getInstance() {
         if (handle == null) {
             handle = new DataBaseHandler();
         }
         return handle;
     }
-    
+
     public void createConnection() {
         try {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -39,7 +39,7 @@ public class DataBaseHandler {
             e.printStackTrace();
         }
     }
-    
+
     void setupBookTable() {
         try {
             // Check if the table exists
@@ -50,18 +50,18 @@ public class DataBaseHandler {
                 System.out.println("Table already exists.");
             } else {
                 // Table doesn't exist, so create it
-                String sql = "CREATE TABLE BOOKs " +
-                             "(title VARCHAR(500), " +
-                             " authors VARCHAR(500), " +
-                             " publisher VARCHAR(500), " +
-                             " description VARCHAR(10000)," +
-                             " imageUrl VARCHAR(1000)," +
-                             " ISBN13 VARCHAR(13)," +
-                             " PTR DOUBLE," +
-                             " MRP DOUBLE," +
-                             " totalQuantity INT," +
-                             " availableQuantaty INT," +
-                             " PRIMARY KEY (ISBN13)) ";
+                String sql = "CREATE TABLE BOOKs "
+                        + "(title VARCHAR(500), "
+                        + " authors VARCHAR(500), "
+                        + " publisher VARCHAR(500), "
+                        + " description VARCHAR(10000),"
+                        + " imageUrl VARCHAR(1000),"
+                        + " ISBN13 VARCHAR(13),"
+                        + " PTR DOUBLE,"
+                        + " MRP DOUBLE,"
+                        + " totalQuantity INT,"
+                        + " availableQuantaty INT,"
+                        + " PRIMARY KEY (ISBN13)) ";
                 stmt = conn.createStatement(); // Initialize statement
                 stmt.executeUpdate(sql);
                 System.out.println(" Books table created.");
@@ -72,13 +72,15 @@ public class DataBaseHandler {
         } finally {
             // Close resources if they were opened
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
     void setupMemberTable() {
         try {
             // Check if the table exists
@@ -89,13 +91,13 @@ public class DataBaseHandler {
                 System.out.println("Table already exists.");
             } else {
                 // Table doesn't exist, so create it
-                String sql = "CREATE TABLE MEMBER " +
-                             "(ID VARCHAR(50), " +
-                             " name VARCHAR(200), " +
-                             " email VARCHAR(200), " +
-                             " phone VARCHAR(20)," +
-                             " address VARCHAR(1000)," +
-                             " PRIMARY KEY (ID)) ";
+                String sql = "CREATE TABLE MEMBER "
+                        + "(ID VARCHAR(50), "
+                        + " name VARCHAR(200), "
+                        + " email VARCHAR(200), "
+                        + " phone VARCHAR(20),"
+                        + " address VARCHAR(1000),"
+                        + " PRIMARY KEY (ID)) ";
                 stmt = conn.createStatement(); // Initialize statement
                 stmt.executeUpdate(sql);
                 System.out.println("Member table created.");
@@ -106,13 +108,50 @@ public class DataBaseHandler {
         } finally {
             // Close resources if they were opened
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
+    void setupIssuesTable() {
+        try {
+            DatabaseMetaData dbMetaData = conn.getMetaData();
+            ResultSet tables = dbMetaData.getTables(null, null, "ISSUES", null);
+
+            if (tables.next()) {
+                System.out.println("ISSUES table already exists.");
+            } else {
+                String sql = "CREATE TABLE ISSUES "
+                        + "(MemberID VARCHAR(50), "
+                        + "BookISBN13 VARCHAR(13), "
+                        + "IssueDate DATE, "
+                        + "ReturnDate DATE, "
+                        + "Fine DOUBLE DEFAULT 0.0, "
+                        + "PRIMARY KEY (MemberID, BookISBN13), "
+                        + "FOREIGN KEY (BookISBN13) REFERENCES BOOKS(ISBN13), "
+                        + "FOREIGN KEY (MemberID) REFERENCES MEMBER(ID))";
+                stmt = conn.createStatement();
+                stmt.executeUpdate(sql);
+                System.out.println("ISSUES table created.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error during setupIssuesTable: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public ResultSet execQuery(String query, Object... params) {
         ResultSet result = null;
         try {
@@ -127,24 +166,24 @@ public class DataBaseHandler {
         }
         return result; // Be cautious: caller needs to close it properly!
     }
-    
+
     public boolean execAction(String qu, Object... params) { //params 0,1,2,3,4,
         boolean success = false;
 
         try (PreparedStatement pstmt = conn.prepareStatement(qu)) {
             // Bind the parameters dynamically
             for (int i = 0; i < params.length; i++) {
-               pstmt.setObject(i + 1, params[i]); // Bind parameter (index starts at 1 for SQL)
+                pstmt.setObject(i + 1, params[i]); // Bind parameter (index starts at 1 for SQL)
             }
 
             // Execute the query (INSERT, UPDATE, DELETE)
             int rowsAffected = pstmt.executeUpdate();
             success = rowsAffected > 0; // If rows were affected, the execution was successful
         } catch (SQLException ex) {
-           System.out.println("Exxeption at execAction: DataBaseHandler - "+ ex.getLocalizedMessage());
+            System.out.println("Exxeption at execAction: DataBaseHandler - " + ex.getLocalizedMessage());
         }
 
-    return success;
+        return success;
     }
-    
+
 }

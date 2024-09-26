@@ -32,7 +32,7 @@ public class Book {
         
     }
 
-    // Getters and setters
+    // Getters
 
     public String getTitle() {
         return title;

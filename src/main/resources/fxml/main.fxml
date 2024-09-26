@@ -126,7 +126,7 @@
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                 </ImageView>
-                                                <TextArea fx:id="bookInfo" prefHeight="241.0" prefWidth="492.0" />
+                                                <TextArea fx:id="bookInfo" editable="false" prefHeight="241.0" prefWidth="492.0" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="241.0" prefWidth="865.0">
@@ -141,14 +141,14 @@
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                    <children>
-                                                      <TextArea fx:id="memberInfo" prefHeight="216.0" prefWidth="671.0" />
+                                                      <TextArea fx:id="memberInfo" editable="false" prefHeight="216.0" prefWidth="671.0" />
                                                    </children>
                                                 </VBox>
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="142.0" prefWidth="865.0">
                                              <children>
-                                                <Button mnemonicParsing="false" onAction="#issueBook" prefHeight="76.0" prefWidth="134.0" text="ISSUE" />
+                                                <Button fx:id="issueButton" mnemonicParsing="false" onAction="#issueBook" prefHeight="76.0" prefWidth="134.0" text="ISSUE" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -160,53 +160,16 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <BorderPane layoutX="110.0" layoutY="45.0" prefHeight="622.6666666666666" prefWidth="865.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <top>
-                                          <HBox alignment="CENTER" prefHeight="44.0" prefWidth="865.0" BorderPane.alignment="CENTER">
-                                             <children>
-                                                <Label text="ISBN:">
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" right="5.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <TextField layoutX="426.0" layoutY="19.0">
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" right="50.0" />
-                                                   </HBox.margin>
-                                                </TextField>
-                                                <Label layoutX="276.0" layoutY="23.0" text="ID">
-                                                   <HBox.margin>
-                                                      <Insets left="50.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <TextField>
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </TextField>
-                                             </children>
-                                          </HBox>
-                                       </top>
-                                       <center>
-                                          <ListView prefHeight="631.0" prefWidth="865.0" BorderPane.alignment="CENTER" />
-                                       </center>
-                                       <bottom>
-                                          <HBox alignment="CENTER" prefHeight="61.0" prefWidth="865.0" BorderPane.alignment="CENTER">
-                                             <children>
-                                                <Button mnemonicParsing="false" text="Renew ">
-                                                   <HBox.margin>
-                                                      <Insets right="10.0" />
-                                                   </HBox.margin>
-                                                </Button>
-                                                <Button mnemonicParsing="false" text="Submission">
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" />
-                                                   </HBox.margin>
-                                                </Button>
-                                             </children>
-                                          </HBox>
-                                       </bottom>
-                                    </BorderPane>
+                                    <Label layoutX="245.0" layoutY="16.0" text="ISBN:" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="16.0" />
+                                    <TextField fx:id="RenewID" layoutX="61.0" layoutY="12.0" AnchorPane.leftAnchor="61.0" AnchorPane.topAnchor="12.0" />
+                                    <Label layoutX="45.0" layoutY="16.0" text="ID" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="16.0" />
+                                    <TextField fx:id="RenewISBN" layoutX="283.0" layoutY="12.0" AnchorPane.leftAnchor="283.0" AnchorPane.topAnchor="12.0" />
+                                    <Button layoutX="156.0" layoutY="570.0" mnemonicParsing="false" text="Renew " AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="156.0" />
+                                    <Button layoutX="45.0" layoutY="570.0" mnemonicParsing="false" text="Submission" AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="45.0" />
+                                    <ImageView fx:id="coverImage1" fitHeight="217.0" fitWidth="171.0" layoutX="45.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" />
+                                    <ListView fx:id="BookInfoList" layoutX="233.0" layoutY="58.0" prefHeight="222.0" prefWidth="603.0" />
+                                    <ListView fx:id="MemberInfoList" layoutX="45.0" layoutY="311.0" prefHeight="222.0" prefWidth="791.0" />
+                                    <Button layoutX="453.0" layoutY="12.0" mnemonicParsing="false" onAction="#RenewSearch" text="Search" />
                                  </children></AnchorPane>
                         </content>
                       </Tab>
