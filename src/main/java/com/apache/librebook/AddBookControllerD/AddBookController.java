@@ -177,7 +177,7 @@ public class AddBookController implements Initializable {
                 int totalQuantity = rs.getInt("totalQuantity");
                 int availableQuantaty = rs.getInt("availableQuantaty");
 
-                String updateQuery = "UPDATE `book` SET `totalQuantity` = ?, `availableQuantaty` = ?, `MRP` = ?, `PTR` = ? WHERE `ISBN13` = ?";
+                String updateQuery = "UPDATE `books` SET `totalQuantity` = ?, `availableQuantaty` = ?, `MRP` = ?, `PTR` = ? WHERE `ISBN13` = ?";
                 dataBaseHandler.execAction(updateQuery, (totalQuantity + Quantity), (availableQuantaty + Quantity), mrp, ptr, isbn);
                 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -188,7 +188,7 @@ public class AddBookController implements Initializable {
             } else {
                 String authorsString = String.join(", ", dBook.getAuthors());
 
-                String insertQuery = "INSERT INTO `book`(`title`, `authors`, `publisher`, `description`, `imageUrl`, `ISBN13`, `PTR`, `MRP`, `totalQuantity`, `availableQuantaty`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                String insertQuery = "INSERT INTO `books`(`title`, `authors`, `publisher`, `description`, `imageUrl`, `ISBN13`, `PTR`, `MRP`, `totalQuantity`, `availableQuantaty`) VALUES (?,?,?,?,?,?,?,?,?,?)";
                 dataBaseHandler.execAction(insertQuery, dBook.getTitle(), authorsString, dBook.getPublisher(), dBook.getDescription(), dBook.getImageUrl(), dBook.getISBN13(), ptr, mrp, Quantity, Quantity);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setHeaderText(null);

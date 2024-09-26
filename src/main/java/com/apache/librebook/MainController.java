@@ -42,6 +42,8 @@ public class MainController implements Initializable {
     private TextArea memberInfo;
     @FXML
     private TextField isbnInfo;
+    @FXML
+    private TextField idinfo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,7 +109,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void loadBooksinfo(ActionEvent event) {
-        System.out.println("Search is called");
+        //System.out.println("Search is called");
         String sql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
         try {
             ResultSet rs = dataBaseHandler.execQuery(sql,isbnInfo.getText());
@@ -135,6 +137,29 @@ public class MainController implements Initializable {
 
     @FXML
     private void loadMemberInfo(ActionEvent event) {
+//        String sql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
+//        try {
+//            ResultSet rs = dataBaseHandler.execQuery(sql,isbnInfo.getText());
+//            boolean flag = false;
+//            while (rs.next()) {
+//                String id = rs.getString("ID");
+//                String name = rs.getString("name");
+//                String email = rs.getString("authors");
+//                String publisher = rs.getString("publisher");
+//                String imageUrl = rs.getString("imageUrl");
+//                int totalQuantity = rs.getInt("totalQuantity");
+//                int availableQuantity = rs.getInt("availableQuantaty");
+//                bookInfo.setText("ISBN:"+isbn+"\nTitle"+title+"\nAuthors:"+authors+"\nPublisher"+publisher+"\nTotalQuantatiy: "+Integer.toString(totalQuantity)+"\nAvailableQuantity: "+Integer.toString(availableQuantity));
+//                coverImage.setImage(image.getImage(imageUrl));
+//                flag = true;
+//            }
+//            if (!flag) {
+//                bookInfo.setText("Book Not Availaible");
+//            }
+//            
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }
