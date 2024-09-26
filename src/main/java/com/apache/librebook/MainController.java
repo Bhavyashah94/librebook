@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -309,30 +310,33 @@ public class MainController implements Initializable {
                 java.sql.Date issueDate = rs.getDate("IssueDate");
                 java.sql.Date returnDate = rs.getDate("ReturnDate");
                 double fine = rs.getDouble("FINE");
-                
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Customize the format if needed
+                String formattedIssueDate = dateFormat.format(issueDate);
+                String formattedReturnDate = dateFormat.format(returnDate);
+
                 String booksql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
-                
+
                 ResultSet rs1 = dataBaseHandler.execQuery(booksql, bookISBN);
                 rs1.next();
-                
+
                 String bookTitle = rs1.getString("title");
                 String authors = rs1.getString("authors");
                 String publisher = rs1.getString("publisher");
                 String imageUrl = rs1.getString("imageUrl");
                 int totalQuantity = rs1.getInt("totalQuantity");
                 int availableQuantity = rs1.getInt("availableQuantaty");
-                    
+
                 coverImage1.setImage(image.getImage(imageUrl));
-                
-                
-                BookInfoList.getItems().clear();  
+
+                BookInfoList.getItems().clear();
                 BookInfoList.getItems().add("ISBN:" + bookISBN);
                 BookInfoList.getItems().add("Title" + bookTitle);
                 BookInfoList.getItems().add("Authors" + authors);
                 BookInfoList.getItems().add("Publisher" + publisher);
                 BookInfoList.getItems().add("Total Quantity" + Integer.toString(totalQuantity));
                 BookInfoList.getItems().add("Available Quantity" + Integer.toString(availableQuantity));
-                
+
                 String membersql = "SELECT * FROM MEMBER WHERE ID = ?";
                 ResultSet rs2 = dataBaseHandler.execQuery(membersql, memberID);
                 rs2.next();
@@ -340,17 +344,26 @@ public class MainController implements Initializable {
                 String email = rs2.getString("email");
                 String phone = rs2.getString("phone");
                 String address = rs2.getString("address");
-                
+
                 MemberInfoList.getItems().clear();
-           
-                MemberInfoList.getItems().add("ID: " + id); 
-                MemberInfoList.getItems().add("Name: " + name); 
-                MemberInfoList.getItems().add("Email: " + email); 
-                MemberInfoList.getItems().add("Phone: " + phone); 
-                MemberInfoList.getItems().add("Address: " + address); 
+
+                MemberInfoList.getItems().add("ID: " + id);
+                MemberInfoList.getItems().add("Name: " + name);
+                MemberInfoList.getItems().add("Email: " + email);
+                MemberInfoList.getItems().add("Phone: " + phone);
+                MemberInfoList.getItems().add("Address: " + address);
+
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+                long differenceInMillis = currentDate.getTime() - returnDate.getTime();
+                long daysOverdue = differenceInMillis / (1000 * 60 * 60 * 24);
+
+                MemberInfoList.getItems().add("Issue Date: " + formattedIssueDate);
+                MemberInfoList.getItems().add("Return Date: " + formattedReturnDate);
                 
+
+                MemberInfoList.getItems().add("Days overdue: " + Long.toString(daysOverdue));
+
                 Double displayFine = calculateFine(returnDate, fine);
-                
                 MemberInfoList.getItems().add("Fine to be Paid: " + Double.toString(displayFine));
 
             } else {
