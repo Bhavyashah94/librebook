@@ -137,7 +137,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void loadMemberInfo(ActionEvent event) {
-        String sql = "SELECT * FROM BOOKS WHERE ISBN13 = ?";
+        String sql = "SELECT * FROM MEMBER WHERE ID = ?";
         try {
             ResultSet rs = dataBaseHandler.execQuery(sql,idinfo.getText());
             boolean flag = false;
@@ -153,7 +153,7 @@ public class MainController implements Initializable {
                 flag = true;
             }
             if (!flag) {
-                bookInfo.setText("Not a Member");
+                memberInfo.setText("Not a Member");
             }
             
         } catch (SQLException e) {
