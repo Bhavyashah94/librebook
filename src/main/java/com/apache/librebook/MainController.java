@@ -62,6 +62,10 @@ public class MainController implements Initializable {
     private ListView<String> BookInfoList;
     @FXML
     private ListView<String> MemberInfoList;
+    @FXML
+    private Button renew;
+    @FXML
+    private Button submission;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -295,6 +299,12 @@ public class MainController implements Initializable {
         }
     }
 
+    private String renewISBNString = "";
+    private String renewMemberID = "";
+
+    private boolean renewISBNvalid = false;
+    private boolean renewMemberIDvalid = false;
+
     @FXML
     private void RenewSearch(ActionEvent event) {
         String isbn = RenewISBN.getText();
@@ -304,9 +314,13 @@ public class MainController implements Initializable {
         try {
             ResultSet rs = dataBaseHandler.execQuery(sql, isbn, id);
             if (rs.next()) {
+                renewISBNvalid = true;
+                renewMemberIDvalid = true;
                 // If a record is found, extract the relevant data
                 String bookISBN = rs.getString("BookISBN13");
+                renewISBNString = bookISBN;
                 String memberID = rs.getString("MemberID");
+                renewMemberID = memberID;
                 java.sql.Date issueDate = rs.getDate("IssueDate");
                 java.sql.Date returnDate = rs.getDate("ReturnDate");
                 double fine = rs.getDouble("FINE");
@@ -359,7 +373,6 @@ public class MainController implements Initializable {
 
                 MemberInfoList.getItems().add("Issue Date: " + formattedIssueDate);
                 MemberInfoList.getItems().add("Return Date: " + formattedReturnDate);
-                
 
                 MemberInfoList.getItems().add("Days overdue: " + Long.toString(daysOverdue));
 
@@ -367,7 +380,10 @@ public class MainController implements Initializable {
                 MemberInfoList.getItems().add("Fine to be Paid: " + Double.toString(displayFine));
 
             } else {
+                renewISBNvalid = false;
+                renewMemberIDvalid = false;
                 // Show an alert if no matching record is found
+                coverImage1.setImage(null);
                 MemberInfoList.getItems().clear();
                 BookInfoList.getItems().clear();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -402,6 +418,187 @@ public class MainController implements Initializable {
             return daysOverdue * fine; // Calculate fine
         } else {
             return 0; // No fine if returned on time
+        }
+    }
+
+    @FXML
+    private void renewButton(ActionEvent event) {
+        String isbn = renewISBNString;
+        String id = renewMemberID;
+        String sql = "SELECT * FROM ISSUES WHERE BookISBN13 = ? AND MemberID = ?";
+
+        try {
+            ResultSet rs = dataBaseHandler.execQuery(sql, isbn, id);
+            if (rs.next()) {
+                // ... (rest of the code for retrieving book and member information)
+
+                // Calculate the fine
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+                java.sql.Date returnDate = rs.getDate("ReturnDate");
+                double fine1 = rs.getDouble("fine");
+                double fine = calculateFine(returnDate, fine1);
+
+                // Show a confirmation dialog if there's a fine
+                if (fine > 0) {
+                    Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmationAlert.setHeaderText("Confirm Fine Payment");
+                    confirmationAlert.setContentText("Has the member paid the fine of " + fine + "?");
+
+                    Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+                    if (result.isPresent() && result.get() == ButtonType.YES) {
+                        // Renew the book and mark the fine as paid
+                        java.sql.Date newReturnDate = new java.sql.Date(System.currentTimeMillis() + (RENEWAL_DAYS * 24 * 60 * 60 * 1000));
+                        String updateSql = "UPDATE ISSUES SET ReturnDate = ?, Fine = 0 WHERE BookISBN13 = ? AND MemberID = ?";
+                        boolean success = dataBaseHandler.execAction(updateSql, newReturnDate, isbn, id);
+
+                        if (success) {
+                            // Book renewed successfully
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setHeaderText(null);
+                            alert.setContentText("Book renewed successfully.");
+                            alert.showAndWait();
+                        } else {
+                            // Error occurred while updating database
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setHeaderText(null);
+                            alert.setContentText("Failed to renew the book.");
+                            alert.showAndWait();
+                        }
+                    } else {
+                        // User chose "No", do nothing
+                        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+                        infoAlert.setHeaderText(null);
+                        infoAlert.setContentText("Book renewal canceled.");
+                        infoAlert.showAndWait();
+                    }
+                } else {
+                    java.sql.Date newReturnDate = new java.sql.Date(System.currentTimeMillis() + (RENEWAL_DAYS * 24 * 60 * 60 * 1000));
+                    String updateSql = "UPDATE ISSUES SET ReturnDate = ?, Fine = 0 WHERE BookISBN13 = ? AND MemberID = ?";
+                    boolean success = dataBaseHandler.execAction(updateSql, newReturnDate, isbn, id);
+
+                    if (success) {
+                        // Book renewed successfully
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setContentText("Book renewed successfully.");
+                        alert.showAndWait();
+                    } else {
+                        // Error occurred while updating database
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setHeaderText(null);
+                        alert.setContentText("Failed to renew the book.");
+                        alert.showAndWait();
+                    }
+                }
+            } else {
+                System.err.println("No record Found");
+            }
+        } catch (SQLException e) {
+            // Handle SQL exception
+            // ...
+        } catch (Exception e) {
+            // Handle other exceptions
+            // ...
+        }
+    }
+
+    private void checkRenewButtonState() {
+        if (renewMemberIDvalid && renewISBNvalid) {
+            renew.setDisable(false); // Enable the button if both have values
+        } else {
+            renew.setDisable(true); // Disable the button if either is empty
+        }
+    }
+
+    @FXML
+    private void submitButton(ActionEvent event) {
+        String isbn = renewISBNString;
+        String id = renewMemberID;
+        String sql = "SELECT * FROM ISSUES WHERE BookISBN13 = ? AND MemberID = ?";
+
+        try {
+            ResultSet rs = dataBaseHandler.execQuery(sql, isbn, id);
+            if (rs.next()) {
+                // ... (rest of the code for retrieving book and member information)
+
+                // Check if the member has paid the fine
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+                java.sql.Date returnDate = rs.getDate("ReturnDate");
+                double fine1 = rs.getDouble("fine");
+                double fine = calculateFine(returnDate, fine1);
+
+                if (fine > 0) {
+                    // Show a confirmation dialog
+
+                    Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmationAlert.setHeaderText("Confirm Fine Payment");
+                    confirmationAlert.setContentText("Has the member paid the fine of " + fine + "?");
+
+                    Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+                    if (result.isPresent() && result.get() == ButtonType.YES) {
+                        // Mark the book as returned and update available quantity
+                        String updateIssueSql = "DELETE FROM `issues` WHERE `MemberID` = ? AND `BookISBN13` = ?";
+                        boolean success1 = dataBaseHandler.execAction(updateIssueSql, id, isbn);
+
+                        String updateBookSql = "UPDATE BOOKS SET availableQuantaty = availableQuantaty + 1 WHERE ISBN13 = ?";
+                        boolean success2 = dataBaseHandler.execAction(updateBookSql, isbn);
+
+                        if (success1 && success2) {
+                            // Book returned successfully
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setHeaderText(null);
+                            alert.setContentText("Book returned successfully.");
+                            alert.showAndWait();
+                            coverImage1.setImage(null);
+                            MemberInfoList.getItems().clear();
+                            BookInfoList.getItems().clear();
+                        } else {
+                            // Error occurred while updating database
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setHeaderText(null);
+                            alert.setContentText("Failed to return the book.");
+                            alert.showAndWait();
+                        }
+                    } else {
+                        // User chose "No", do nothing
+                        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+                        infoAlert.setHeaderText(null);
+                        infoAlert.setContentText("Book return canceled.");
+                        infoAlert.showAndWait();
+                    }
+                } else {
+                    String updateIssueSql = "DELETE FROM `issues` WHERE `MemberID` = ? AND `BookISBN13` = ?";
+                    boolean success1 = dataBaseHandler.execAction(updateIssueSql, id, isbn);
+
+                    String updateBookSql = "UPDATE BOOKS SET availableQuantaty = availableQuantaty + 1 WHERE ISBN13 = ?";
+                    boolean success2 = dataBaseHandler.execAction(updateBookSql, isbn);
+
+                    if (success1 && success2) {
+                        // Book returned successfully
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setContentText("Book returned successfully.");
+                        alert.showAndWait();
+                        coverImage1.setImage(null);
+                        MemberInfoList.getItems().clear();
+                        BookInfoList.getItems().clear();
+                    } else {
+                        // Error occurred while updating database
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setHeaderText(null);
+                        alert.setContentText("Failed to return the book.");
+                        alert.showAndWait();
+                    }
+                }
+            } else {
+                System.err.println("No record Found");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

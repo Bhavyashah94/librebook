@@ -99,8 +99,8 @@ public class ViewBooksController implements Initializable {
                 String authors = rs.getString("authors");
                 String publisher = rs.getString("publisher");
                 String imageUrl = rs.getString("imageUrl");
-                int totalQuantity = rs.getInt("totalQuantity");
-                int availableQuantity = rs.getInt("availableQuantaty");
+                int totalQuantity = rs.getInt("availableQuantaty");
+                int availableQuantity = rs.getInt("totalQuantity");
 
                 // Create a new Book object and add it to the list
                 vBook book = new vBook(isbn, title, authors, publisher, totalQuantity, availableQuantity, imageUrl);
@@ -152,6 +152,21 @@ public class ViewBooksController implements Initializable {
             content.putString(isbn);
             clipboard.setContent(content);
         }
+    }
+
+    @FXML
+    private void edit(ActionEvent event) {
+        vBook selectedMember = bookTableView.getSelectionModel().getSelectedItem();
+        if(selectedMember != null){
+            
+            
+        }
+        
+    }
+
+    @FXML
+    private void delete(ActionEvent event) {
+        
     }
 }
 

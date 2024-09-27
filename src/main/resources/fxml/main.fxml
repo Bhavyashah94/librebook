@@ -164,8 +164,8 @@
                                     <TextField fx:id="RenewID" layoutX="61.0" layoutY="12.0" AnchorPane.leftAnchor="61.0" AnchorPane.topAnchor="12.0" />
                                     <Label layoutX="45.0" layoutY="16.0" text="ID" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="16.0" />
                                     <TextField fx:id="RenewISBN" layoutX="283.0" layoutY="12.0" AnchorPane.leftAnchor="283.0" AnchorPane.topAnchor="12.0" />
-                                    <Button layoutX="156.0" layoutY="570.0" mnemonicParsing="false" text="Renew " AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="156.0" />
-                                    <Button layoutX="45.0" layoutY="570.0" mnemonicParsing="false" text="Submission" AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="45.0" />
+                                    <Button fx:id="renew" layoutX="156.0" layoutY="570.0" mnemonicParsing="false" onAction="#renewButton" text="Renew " AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="156.0" />
+                                    <Button fx:id="submission" layoutX="45.0" layoutY="570.0" mnemonicParsing="false" onAction="#submitButton" text="Submission" AnchorPane.bottomAnchor="27.333333333333258" AnchorPane.leftAnchor="45.0" />
                                     <ImageView fx:id="coverImage1" fitHeight="217.0" fitWidth="171.0" layoutX="45.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="45.0" />
                                     <ListView fx:id="BookInfoList" layoutX="233.0" layoutY="58.0" prefHeight="222.0" prefWidth="603.0" />
                                     <ListView fx:id="MemberInfoList" layoutX="45.0" layoutY="311.0" prefHeight="222.0" prefWidth="791.0" />
