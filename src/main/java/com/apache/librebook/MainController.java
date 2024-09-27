@@ -95,15 +95,6 @@ public class MainController implements Initializable {
         loadFXMLView("ViewBooks", "View Books", event);
     }
 
-    @FXML
-    private void viewRecords(ActionEvent event) {
-        loadFXMLView("ViewRecords", "View Records", event);
-    }
-
-    @FXML
-    private void openSettings(ActionEvent event) {
-        loadFXMLView("Settings", "Settings", event);
-    }
 
     // Method to load an FXML view
     private void loadFXMLView(String fxmlFileName, String title, ActionEvent event) {

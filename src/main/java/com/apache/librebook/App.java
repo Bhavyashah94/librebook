@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import com.apache.librebook.database.DataBaseHandler;
 import java.io.IOException;
 
 /**
@@ -21,6 +21,9 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+        new Thread(() -> {
+            DataBaseHandler.getInstance();
+        }).start();
     }
 
     static void setRoot(String fxml) throws IOException {

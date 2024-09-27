@@ -22,7 +22,7 @@
          <right>
             <VBox maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addMember" prefHeight="150.0" prefWidth="200.0" text="Add Member">
+                  <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addMember" prefHeight="300.0" prefWidth="200.0" text="Add Member">
                      <graphic>
                         <ImageView fitHeight="42.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -31,7 +31,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addBook" prefHeight="150.0" prefWidth="200.0" text="Add Book">
+                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addBook" prefHeight="300.0" prefWidth="200.0" text="Add Book">
                      <graphic>
                         <ImageView fitHeight="42.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -40,7 +40,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="118.0" mnemonicParsing="false" onAction="#viewMember" prefHeight="150.0" prefWidth="200.0" text="View Member">
+                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="118.0" mnemonicParsing="false" onAction="#viewMember" prefHeight="300.0" prefWidth="200.0" text="View Member">
                      <graphic>
                         <ImageView fitHeight="42.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -49,7 +49,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="226.0" mnemonicParsing="false" onAction="#viewBook" prefHeight="229.0" prefWidth="200.0" text="View Book">
+                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="226.0" mnemonicParsing="false" onAction="#viewBook" prefHeight="300.0" prefWidth="200.0" text="View Book">
                      <graphic>
                         <ImageView fitHeight="42.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                            <image>
