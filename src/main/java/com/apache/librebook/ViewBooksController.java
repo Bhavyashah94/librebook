@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -90,6 +91,7 @@ public class ViewBooksController implements Initializable {
 
     // Load books from the database into bookList
     private void loadBooks() {
+        bookList.clear();
         String sql = "SELECT * FROM BOOKS";
         try {
             ResultSet rs = dataBaseHandler.execQuery(sql);
@@ -132,12 +134,12 @@ public class ViewBooksController implements Initializable {
             String lowerAuthor = book.getAuthor().toLowerCase();
             String lowerIsbn = book.getIsbn().toLowerCase();
 
-            return lowerTitle.contains(searchText) ||
-                   lowerAuthor.contains(searchText) ||
-                   lowerIsbn.contains(searchText);
+            return lowerTitle.contains(searchText)
+                    || lowerAuthor.contains(searchText)
+                    || lowerIsbn.contains(searchText);
         });
     }
-    
+
     @FXML
     private void copyISBN() {
         // Get the selected book
@@ -145,7 +147,7 @@ public class ViewBooksController implements Initializable {
         if (selectedBook != null) {
             // Get the ISBN of the selected book
             String isbn = selectedBook.getIsbn();
-            
+
             // Copy ISBN to clipboard
             Clipboard clipboard = Clipboard.getSystemClipboard();
             ClipboardContent content = new ClipboardContent();
@@ -154,19 +156,45 @@ public class ViewBooksController implements Initializable {
         }
     }
 
-    @FXML
-    private void edit(ActionEvent event) {
-        vBook selectedMember = bookTableView.getSelectionModel().getSelectedItem();
-        if(selectedMember != null){
-            
-            
-        }
-        
-    }
 
     @FXML
     private void delete(ActionEvent event) {
-        
+        vBook selectedBooks = bookTableView.getSelectionModel().getSelectedItem();
+        if (selectedBooks != null) {
+            String ISBN = selectedBooks.getIsbn();
+            try {
+                String sql = "SELECT * FROM ISSUES WHERE BOOKISBN13 = ?";
+                ResultSet rs = dataBaseHandler.execQuery(sql, ISBN);
+
+                if (rs.next()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Cannot delete the book, is in use");
+                    alert.showAndWait();
+                    return;
+                }
+                
+                String deletesql = "DELETE FROM `books` WHERE ISBN13 = ?";
+                boolean success = dataBaseHandler.execAction(deletesql, ISBN);
+                
+                if (success) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Book Deleted");
+                    alert.showAndWait();
+                    loadBooks();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Book delete failed");
+                    alert.showAndWait();
+                }
+                
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
-

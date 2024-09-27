@@ -16,6 +16,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -84,6 +85,7 @@ public class ViewMembersController implements Initializable {
 
     // Load members from the database into memberList
     private void loadMembers() {
+        memberList.clear();
         String sql = "SELECT * FROM MEMBER";
         try {
             ResultSet rs = dataBaseHandler.execQuery(sql);
@@ -106,6 +108,7 @@ public class ViewMembersController implements Initializable {
     // Implement search functionality
     @FXML
     private void search(ActionEvent event) {
+        
         String searchText = searchField.getText().toLowerCase();
 
         filteredMembers.setPredicate(member -> {
@@ -129,6 +132,47 @@ public class ViewMembersController implements Initializable {
     }
 
     private void openMemberDetails(vMember selectedMember) {
-        
+
+    }
+
+    @FXML
+    private void delete(ActionEvent event) {
+
+        vMember selectedMember = memberTableView.getSelectionModel().getSelectedItem();
+        if (selectedMember != null) {
+            String ID = selectedMember.getId();
+            try {
+                String sql = "SELECT * FROM ISSUES WHERE MemberID = ?";
+                ResultSet rs = dataBaseHandler.execQuery(sql, ID);
+
+                if (rs.next()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Cannot delete the Member, They have books");
+                    alert.showAndWait();
+                    return;
+                }
+
+                String deletesql = "DELETE FROM `Member` WHERE ID = ?";
+                boolean success = dataBaseHandler.execAction(deletesql, ID);
+
+                if (success) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Member Deleted");
+                    alert.showAndWait();
+                    loadMembers();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Member delete failed");
+                    alert.showAndWait();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
