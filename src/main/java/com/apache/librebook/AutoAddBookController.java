@@ -50,6 +50,7 @@ public class AutoAddBookController implements Initializable {
             startIndex = 0; // Reset start index
             books.clear(); // Clear previous results
             loadBooks(query); // Load initial results
+            pageLabel.setText("Page 1"); // Update Page number back to 1
             System.out.println(googleBooksApiService.getTotalItems());
         }
     }

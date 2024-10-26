@@ -5,6 +5,7 @@ package com.apache.librebook.database;
  * @author bhavy
  */
 import java.sql.*;
+import javafx.scene.control.Alert;
 
 public class DataBaseHandler {
 
@@ -35,6 +36,10 @@ public class DataBaseHandler {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             System.out.println("Connection established successfully.");
         } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("DataBase Error");
+            alert.showAndWait();
+            
             System.err.println("Error while connecting to the database: " + e.getMessage());
             e.printStackTrace();
         }
