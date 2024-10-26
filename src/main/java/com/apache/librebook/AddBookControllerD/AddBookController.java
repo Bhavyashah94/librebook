@@ -166,6 +166,13 @@ public class AddBookController implements Initializable {
         if (Quantity == 0) {
             return;
         }
+        if(MRP.getText().equals("")){
+            MRP.setText("0");
+        }
+        if(PTR.getText().equals("")){
+            PTR.setText("0");
+        }
+        
         double mrp = Double.valueOf(MRP.getText());
         double ptr = Double.valueOf(PTR.getText());
 
